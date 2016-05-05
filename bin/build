@@ -1,0 +1,4 @@
+#!/bin/sh
+cd "`dirname "$0"`/../src"
+
+docker build -t ${IMAGE:-timonier/beanstalkd}:${TAG:-1.10} .
