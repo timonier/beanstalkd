@@ -5,7 +5,7 @@
 Pull the image `timonier/beanstalkd`:
 
 ```sh
-# Get the latest image
+# Get the latest image (version 1.10)
 docker pull timonier/beanstalkd
 
 # Or get a specific version
@@ -20,7 +20,11 @@ Run the application via `docker run`. The beanstalkd options can be passed as ar
 
 ```sh
 # See all beanstalkd options
-docker run timonier/beanstalkd -h
+docker run \
+    -i \
+    -t \
+    --net host \
+    timonier/beanstalkd -h
 
 # Run beanstalkd
 docker run \

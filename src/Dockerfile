@@ -6,33 +6,26 @@ ENV \
 
 RUN set -x \
 
-    # Prepare system
-
-    && apk add -U \
-
     # Install packages
 
-    && BUILD_DEPS="curl gcc make musl-dev tar" \
-
-    && apk add \
-           $BUILD_DEPS \
+    && apk add --no-cache --no-progress --virtual build_deps \
+           build-base \
+           curl \
 
     # Install beanstalkd
 
-    && curl -ksL "https://github.com/kr/beanstalkd/archive/v$BEANSTALKD_VERSION.tar.gz" | tar fxz - -C /tmp \
+    && curl -sL "https://github.com/kr/beanstalkd/archive/v$BEANSTALKD_VERSION.tar.gz" | tar fxz - -C /tmp \
     && sed -i "s|#include <sys/fcntl.h>|#include <fcntl.h>|g" /tmp/beanstalkd-$BEANSTALKD_VERSION/sd-daemon.c \
-
     && make -C /tmp/beanstalkd-$BEANSTALKD_VERSION \
     && make -C /tmp/beanstalkd-$BEANSTALKD_VERSION install PREFIX=/usr \
 
     # Clean
 
-    && apk del \
-           $BUILD_DEPS \
+    && apk del --no-progress \
+           build_deps \
 
     && rm -rf \
-           /tmp/* \
-           /var/cache/apk/*
+           /tmp/*
 
 COPY ./rootfs /
 
