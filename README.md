@@ -1,5 +1,7 @@
 # README
 
+Beanstalk is a simple, fast work queue
+
 ## Installation
 
 Pull the image `timonier/beanstalkd`:
@@ -50,3 +52,4 @@ __Note__: Use the script `bin/build` to test your modifications locally.
 * [command "docker pull"](https://docs.docker.com/reference/commandline/pull/)
 * [command "docker run"](https://docs.docker.com/reference/run/)
 * [image "timonier/beanstalkd"](https://hub.docker.com/r/timonier/beanstalkd/)
+* [timonier/dumb-entrypoint](https://github.com/timonier/dumb-entrypoint)
