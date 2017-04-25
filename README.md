@@ -4,36 +4,31 @@ Beanstalk is a simple, fast work queue
 
 ## Installation
 
-Pull the image `timonier/beanstalkd`:
+Copy `bin/beanstalkd` into your executable folder (like `/usr/local/bin` or `$HOME/bin`):
 
 ```sh
-# Get the latest image (version 1.10)
-docker pull timonier/beanstalkd
+sudo curl --location --output /usr/local/bin/beanstalkd "https://github.com/timonier/beanstalkd/raw/master/bin/beanstalkd"
+sudo chmod +x /usr/local/bin/beanstalkd
+```
 
-# Or get a specific version
+Linux users can use the [installer](https://github.com/timonier/beanstalkd/blob/master/bin/installer):
 
-# Get the version 1.10
-docker pull timonier/beanstalkd:1.10
+```sh
+curl --location "https://github.com/timonier/beanstalkd/raw/master/bin/installer" | sudo sh -s install
 ```
 
 ## Usage
 
-Run the application via `docker run`. The beanstalkd options can be passed as arguments:
+Run the command `beanstalkd`:
 
 ```sh
 # See all beanstalkd options
-docker run \
-    -i \
-    -t \
-    --net host \
-    timonier/beanstalkd -h
+
+beanstalkd -h
 
 # Run beanstalkd
-docker run \
-    -i \
-    -t \
-    --net host \
-    timonier/beanstalkd -V
+
+beanstalkd -V
 ```
 
 ## Contributing
@@ -48,8 +43,8 @@ __Note__: Use the script `bin/build` to test your modifications locally.
 
 ## Links
 
-* [beanstalkd](https://github.com/kr/beanstalkd)
-* [command "docker pull"](https://docs.docker.com/reference/commandline/pull/)
 * [command "docker run"](https://docs.docker.com/reference/run/)
 * [image "timonier/beanstalkd"](https://hub.docker.com/r/timonier/beanstalkd/)
+* [kr/beanstalkd](https://github.com/kr/beanstalkd)
 * [timonier/dumb-entrypoint](https://github.com/timonier/dumb-entrypoint)
+* [timonier/version-lister](https://github.com/timonier/version-lister)

@@ -1,37 +1,45 @@
-FROM alpine:3.4
+FROM ubuntu:latest
 
 LABEL \
     maintainer="Morgan Auchede <morgan.auchede@gmail.com>"
 
 ENV \
-    BEANSTALKD_VERSION=1.10
+    BEANSTALKD_VERSION=latest
 
-RUN set -x \
+RUN set -eux \
+
+    # Prepare system
+
+    && export DEBIAN_FRONTEND=noninteractive \
+
+    && apt-get update \
 
     # Install packages
 
-    && apk add --no-cache --no-progress --virtual build_deps \
-           build-base \
-           ca-certificates \
-           curl \
+    && export BUILD_DEPS="build-essential ca-certificates curl" \
+
+    && apt-get install --no-install-recommends --yes \
+           ${BUILD_DEPS} \
 
     # Install beanstalkd
 
-    && curl -sL "https://github.com/kr/beanstalkd/archive/v${BEANSTALKD_VERSION}.tar.gz" | tar fxz - -C /tmp \
-    && sed -i "s|#include <sys/fcntl.h>|#include <fcntl.h>|g" /tmp/beanstalkd-${BEANSTALKD_VERSION}/sd-daemon.c \
-    && make -C /tmp/beanstalkd-${BEANSTALKD_VERSION} \
-    && make -C /tmp/beanstalkd-${BEANSTALKD_VERSION} install PREFIX=/usr \
+    && export $(curl "https://raw.githubusercontent.com/timonier/version-lister/release/generated/beanstalkd/${BEANSTALKD_VERSION}" | xargs) \
 
-    # Install timonier/dumb-entrypoint
+    && curl --location "https://github.com/kr/beanstalkd/archive/v${BEANSTALKD_VERSION}.tar.gz" | tar --directory /tmp --extract --gzip \
+    && make --directory "/tmp/beanstalkd-${BEANSTALKD_VERSION}" \
+    && make --directory "/tmp/beanstalkd-${BEANSTALKD_VERSION}" install PREFIX=/usr \
 
-    && curl -sL "https://github.com/timonier/dumb-entrypoint/raw/master/bin/installer" | INSTALL_DIRECTORY="/usr/sbin" sh -s install \
+    # Install dumb-entrypoint
+
+    && curl --location "https://github.com/timonier/dumb-entrypoint/raw/master/bin/installer" | INSTALL_DIRECTORY="/usr/sbin" sh -s install \
 
     # Clean
 
-    && apk del --no-progress \
-           build_deps \
+    && apt-get remove --purge --yes \
+           ${BUILD_DEPS} \
+    && apt-get autoremove --purge --yes \
 
-    && rm -rf \
+    && rm --force --recursive \
            /tmp/*
 
-ENTRYPOINT [ "dumb-init" , "--" , "dumb-entrypoint" , "beanstalkd" ]
+ENTRYPOINT [ "dumb-init" , "--" , "dumb-entrypoint" ]
