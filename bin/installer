@@ -25,7 +25,7 @@ fi
 
 case "$1" in
     install )
-        curl --location --output /usr/local/bin/beanstalkd "https://github.com/timonier/beanstalkd/raw/master/bin/beanstalkd"
+        curl --location --output /usr/local/bin/beanstalkd "https://github.com/timonier/beanstalkd/raw/master/bin/cmd"
         chmod +x /usr/local/bin/beanstalkd
     ;;
 

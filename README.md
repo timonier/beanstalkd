@@ -4,13 +4,6 @@ Beanstalk is a simple, fast work queue
 
 ## Installation
 
-Copy `bin/beanstalkd` into your executable folder (like `/usr/local/bin` or `$HOME/bin`):
-
-```sh
-sudo curl --location --output /usr/local/bin/beanstalkd "https://github.com/timonier/beanstalkd/raw/master/bin/beanstalkd"
-sudo chmod +x /usr/local/bin/beanstalkd
-```
-
 Linux users can use the [installer](https://github.com/timonier/beanstalkd/blob/master/bin/installer):
 
 ```sh

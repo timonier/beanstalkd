@@ -12,4 +12,4 @@ docker run \
     --net host \
     --rm \
     --tty="$([ -t 0 ] && echo "true" || echo "false")" \
-    "${IMAGE:-timonier/beanstalkd}:${TAG:-latest}" beanstalkd "$@"
+    "${IMAGE:-timonier/beanstalkd}:${TAG:-latest}" "$(basename "$0")" "$@"
