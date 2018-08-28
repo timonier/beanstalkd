@@ -3,10 +3,7 @@ FROM debian:stable-slim
 LABEL \
     maintainer="Morgan Auchede <morgan.auchede@gmail.com>"
 
-ENV \
-    BEANSTALKD_VERSION=latest
-
-RUN set -ex \
+RUN set -e -u -x \
 \
     # Prepare system
 \
@@ -15,29 +12,25 @@ RUN set -ex \
 \
     # Install packages
 \
-    && export BUILD_DEPS="build-essential curl" \
-    && apt-get install --no-install-recommends --yes \
-           ${BUILD_DEPS} \
-           ca-certificates \
+    && BUILD_DEPS="build-essential curl" \
+    && apt-get install --no-install-recommends --yes ${BUILD_DEPS} ca-certificates locales \
 \
-    # Install kr/beanstalkd
+    # Install beanstalkd
 \
-    && export $(curl --location "https://github.com/timonier/version-lister/raw/generated/kr/beanstalkd/${BEANSTALKD_VERSION}" | xargs) \
-    && curl --location "https://github.com/kr/beanstalkd/archive/v${BEANSTALKD_VERSION}.tar.gz" | tar --directory /tmp --extract --gzip \
-    && make --directory "/tmp/beanstalkd-${BEANSTALKD_VERSION}" \
-    && make --directory "/tmp/beanstalkd-${BEANSTALKD_VERSION}" install PREFIX=/usr \
+    && export $(curl --location "https://github.com/timonier/version-lister/raw/generated/kr/beanstalkd/latest" | xargs) \
+    && curl --location "${BEANSTALKD_SOURCE}" | tar --directory /tmp --extract --gzip \
+    && make --directory /tmp/beanstalkd-"${BEANSTALKD_VERSION}" \
+    && make --directory /tmp/beanstalkd-"${BEANSTALKD_VERSION}" install \
 \
-    # Install timonier/dumb-entrypoint
+    # Install dumb-entrypoint
 \
-    && curl --location "https://github.com/timonier/dumb-entrypoint/raw/master/src/dumb-entrypoint/installer" | INSTALL_DIRECTORY="/usr/sbin" sh -s -- install \
-    && curl --location "https://github.com/timonier/dumb-entrypoint/raw/master/src/gosu/installer" | INSTALL_DIRECTORY="/usr/sbin" sh -s -- install \
+    && curl --location "https://github.com/timonier/dumb-entrypoint/raw/master/src/dumb-entrypoint/installer" | sh -s -- install \
+    && curl --location "https://github.com/timonier/dumb-entrypoint/raw/master/src/gosu/installer" | sh -s -- install \
 \
     # Clean
 \
-    && apt-get remove --purge --yes \
-           ${BUILD_DEPS} \
+    && apt-get remove --purge --yes ${BUILD_DEPS} \
     && apt-get autoremove --purge --yes \
-    && rm --force --recursive \
-           /tmp/*
+    && rm -f -r /tmp/* /var/lib/apt/lists/*
 
 ENTRYPOINT [ "dumb-entrypoint" ]
