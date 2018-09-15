@@ -4,8 +4,6 @@ Beanstalk is a simple, fast work queue
 
 ## Installation
 
-Linux users can use the [installer](https://github.com/timonier/beanstalkd/blob/master/bin/installer):
-
 ```sh
 # Define installation folder
 
