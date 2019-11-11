@@ -1,7 +1,7 @@
 FROM debian:stable-slim
 
 LABEL \
-    maintainer="Morgan Auchede <morgan.auchede@gmail.com>"
+    maintainer="Morgan AUCHEDE <morgan.auchede@gmail.com>"
 
 RUN set -e -u -x \
 \
@@ -17,15 +17,15 @@ RUN set -e -u -x \
 \
     # Install beanstalkd
 \
-    && export $(curl --location "https://github.com/timonier/version-lister/raw/generated/kr/beanstalkd/latest" | xargs) \
+    && export $(curl --location "https://gitlab.com/timonier/version-lister/raw/generated/kr/beanstalkd/latest" | xargs) \
     && curl --location "${BEANSTALKD_SOURCE}" | tar --directory /tmp --extract --gzip \
     && make --directory /tmp/beanstalkd-"${BEANSTALKD_VERSION}" \
     && make --directory /tmp/beanstalkd-"${BEANSTALKD_VERSION}" install \
 \
     # Install dumb-entrypoint
 \
-    && curl --location "https://github.com/timonier/dumb-entrypoint/raw/master/src/dumb-entrypoint/installer" | bash -s -- install \
-    && curl --location "https://github.com/timonier/dumb-entrypoint/raw/master/src/gosu/installer" | bash -s -- install \
+    && curl --location "https://gitlab.com/timonier/dumb-entrypoint/raw/master/src/dumb-entrypoint/installer" | bash -s -- install \
+    && curl --location "https://gitlab.com/timonier/dumb-entrypoint/raw/master/src/gosu/installer" | bash -s -- install \
 \
     # Clean
 \
