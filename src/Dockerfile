@@ -3,6 +3,9 @@ FROM debian:stable-slim
 LABEL \
     maintainer="Morgan AUCHEDE <morgan.auchede@gmail.com>"
 
+ENV \
+    LC_ALL=C.UTF-8
+
 RUN set -e -u -x \
 \
     # Prepare system
@@ -17,20 +20,12 @@ RUN set -e -u -x \
 \
     # Install beanstalkd
 \
-    && export $(curl --location "https://gitlab.com/timonier/version-lister/raw/generated/kr/beanstalkd/latest" | xargs) \
-    && curl --location "${BEANSTALKD_SOURCE}" | tar --directory /tmp --extract --gzip \
-    && make --directory /tmp/beanstalkd-"${BEANSTALKD_VERSION}" \
-    && make --directory /tmp/beanstalkd-"${BEANSTALKD_VERSION}" install \
-\
-    # Install dumb-entrypoint
-\
-    && curl --location "https://gitlab.com/timonier/dumb-entrypoint/raw/master/src/dumb-entrypoint/installer" | bash -s -- install \
-    && curl --location "https://gitlab.com/timonier/dumb-entrypoint/raw/master/src/gosu/installer" | bash -s -- install \
+    && curl --location "https://github.com/beanstalkd/beanstalkd/archive/v1.12.tar.gz" | tar --directory /tmp --extract --gzip \
+    && make --directory /tmp/beanstalkd-1.12 \
+    && make --directory /tmp/beanstalkd-1.12 install \
 \
     # Clean
 \
     && apt-get remove --purge --yes ${BUILD_DEPS} \
     && apt-get autoremove --purge --yes \
     && rm -f -r /tmp/* /var/lib/apt/lists/*
-
-ENTRYPOINT [ "dumb-entrypoint" ]
